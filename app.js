@@ -1,7 +1,12 @@
 const pokemon = require('./data.js');
 
 const game = {
-    party: [],
+    party: [
+      { id: 1, name: 'Bulbasaur' }, // Ex #7
+      { id: 2, name: 'Charmander' },
+      { id: 3, name: 'Squirtle' },
+      { id: 25, name: 'Pikachu' }
+    ],
     gyms: [
       { location: "Pewter City", completed: false, difficulty: 1 },
       { location: "Cerulean City", completed: false, difficulty: 2 },
@@ -41,8 +46,8 @@ Exercise 4
 Solve Exercise 4 here: 
 */
 
-const st = pokemon.find(pok => pok.starter === true);
-game.party.push(st); // I think my work is correct ,but it don't show ... all work ..
+const st = pokemon.filter(p => p.starter === 'true');
+game.party.push(st[0]); 
 
 /*
 Exercise 5
@@ -91,8 +96,202 @@ More Hints: The existing starter Pokemon will be *replaced* in your party with t
 
 Solve Exercise 7 here:
 */
+// Evolve each one of them ..
+let bulbasaurIndex = party.findIndex(pokemon => pokemon.id === 1);
+game.party.splice(bulbasaurIndex, 1, { id: 2, name: 'Ivysaur' });
 
-// I don't Know how to solve ..
+let charmaderIndex = party.findIndex(pokemon => pokemon.id === 2);
+game.party.splice(charmaderIndex, 1, { id: 5, name: 'Charmeleon' });
+
+let squirtleIndex = party.findIndex(pokemon => pokemon.id === 3);
+game.party.splice(squirtleIndex, 1, { id: 8, name: 'Wartortle' });
+
+let pikachuIndex = party.findIndex(pokemon => pokemon.id === 25);
+game.party.splice(pikachuIndex, 1, { id: 26, name: 'Raichu' });
+
+/*
+Exercise 8
+1. Print the name of each Pokémon in your party.
+2. Consider using a loop or an array method to access each Pokémon's name.
+
+Solve Exercise 8 here:
+*/
+game.party.forEach(pokemon => {
+  console.log(pokemon.name);
+});
+
+/*
+Exercise 9
+1. Can you print out all the starter Pokémon from the `pokemon` array?
+2. Think about how you can identify a starter Pokémon and then log their names.
+
+
+Solve Exercise 9 here:
+*/
+
+pokemon.forEach(p => {
+  if (p.starter) {
+    console.log(p.name);
+  }
+});
+
+/*
+Exercise 10
+1. Add a method called `catchPokemon` to the `game` object. This method should:
+  - Accept an object as a parameter called `pokemonObj`
+  - Add the `pokemonObj` to the `game.party` array.
+  - not return anything
+
+After writing this method, call it and pass in a Pokemon object of your choice from the `pokemon` data to catch it.
+
+Solve Exercise 10 here:
+*/
+
+let gameCatch = {
+  catchPokemon(pokemonObj) {
+    game.party.push(pokemonObj);
+  }
+};
+
+gameCatch.catchPokemon(pokemon[3]);
+console.log(game.party);
+
+/*
+Exercise 11
+1. Copy the `catchPokemon` method that you just wrote above, and paste it below. Modify it so that it also decreases the number of pokeballs in your inventory each time you catch a Pokémon.
+2. How will you find and update the quantity of pokeballs in the `game.items` array?
+
+Tips:
+For this exercise, it's okay to have a negative number of pokeballs.
+After updating the method, call it and pass in a Pokemon object of your choice from the `pokemon` data to catch it.
+Also, log the `game.items` array to confirm that the pokeball quantity is being decremented.
+
+Solve Exercise 11 here:
+*/
+
+let gameCatchM = {
+  catchPokemon(pokemonObj) {
+    // for Decreasing ..
+    game.items.find(item => item.name === 'Pokeball').quantity--;
+
+    // Add pokemon ..
+    this.party.push(pokemonObj);
+  }
+};
+
+game.catchPokemon(pokemon[3]); 
+console.log(game.items);
+
+/*
+Exercise 12
+1. Similar to Exercise 6, now complete gyms with a difficulty below 6. How will you approach this?
+ (change the value of `complete` in the qualifying objects from false to true).
+
+Solve Exercise 12 here:
+*/
+
+for (let i = 0; i < gyms.length; i++) {
+  if (gyms[i].difficulty < 6) {
+    gyms[i].complete = true;
+  }
+}
+console.log(gyms);
+
+/*
+Exercise 13
+1. Create a `gymStatus` method in `game` to tally completed and incomplete gyms.
+2. How will you iterate through the `gyms` array and update the tally? Remember to log the final tally.
+
+This method should:
+  - Not accept any arguments.
+  - Initially create a constant `gymTally`, which is an object that has two 
+    properties: `completed` and `incomplete`, both of which are initially set to 0.
+  - Iterate through the objects in the `game.gyms` array and update the 
+    properties on `gymTally` as follows: 
+    - `completed` should count how many gyms in the array have a value of `true` 
+      for their `completed` property. 
+    - `incomplete` should count how many gyms in the array have a value of 
+      `false` for their `completed` property.
+  - Log the value of `gymTally`.
+  - The method should not return anything.
+
+For example, if five gym objects have a value of `true` on their `completed` property and three gym objects have a value of `false` on their `completed` property, the logged value would be: `{ completed: 5, incomplete: 3 }`.
+
+Solve Exercise 13 here:
+*/
+let gamee = {
+
+  gymStatus() {
+  const gymTally = {
+    completed: 0,
+    incomplete: 0
+  };
+
+  this.gyms.forEach(gym => {
+    if (gym.complete) {
+      gymTally.completed++;
+    } else {
+      gymTally.incomplete++;
+    }
+  });
+
+  function partyCount() {    // Ex #14
+    return this.party.length;
+  }
+
+  function completeEasyGyms() { // Ex #15
+    this.gyms.forEach(gym => {
+      if (gym.difficulty < 8) {
+        gym.complete = true;
+      }
+    });
+  }
+
+  console.log(gymTally);
+  console.log(game.partyCount());
+}
+};
+game.gymStatus();
+game.completeEasyGyms();
+
+console.log(gamee); //Ex #16
+/*
+Exercise 14
+1. Add a `partyCount` method to `game` that counts the number of Pokémon in your party.
+
+This method should:
+  - Not accept any arguments.
+  - Count the number of Pokemon in the party.
+  - return the found number of Pokemon in the party.
+
+Solve Exercise 14 here:
+*/
+
+/*
+Exercise 15
+1. Now, complete gyms with a difficulty below 8. Reflect on how this is similar to or different from the previous gym exercises.
+(change the value of `complete` in the qualifying objects from false to true).
+
+Solve Exercise 15 here:
+*/
+
+/*
+Exercise 16
+1. Log the entire `game` object to the console. Take a moment to review the changes you've made throughout the exercises.
+
+Solve Exercise 16 here:
+*/
+
+
+//Important Comment .. I have an error ..not solved with the party array , I modified the code and the bugs remains. 
+//Therefore, I worked assume for correct answers.
+
+
+
+
+
+
+
 
 
 
